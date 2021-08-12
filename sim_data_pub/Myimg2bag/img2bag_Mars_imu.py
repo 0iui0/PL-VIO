@@ -1,21 +1,23 @@
-import cv2
-
-import time, sys, os
-from ros import rosbag
+import os
 import roslib
 import rospy
+import sys
+from ros import rosbag
+
 roslib.load_manifest('sensor_msgs')
-from sensor_msgs.msg import Image,Imu
+from sensor_msgs.msg import Image, Imu
 from geometry_msgs.msg import Vector3
 
 # import ImageFile
 from PIL import ImageFile
 from PIL import Image as ImagePIL
 
+
 def CompSortFileNamesNr(f):
-    g = os.path.splitext(os.path.split(f)[1])[0] #get the file of the
+    g = os.path.splitext(os.path.split(f)[1])[0]  # get the file of the
     numbertext = ''.join(c for c in g if c.isdigit())
     return int(numbertext)
+
 
 def ReadImages(filename):
     '''Generates a list of files from the directory'''
@@ -35,9 +37,10 @@ def ReadImages(filename):
             all.append(os.path.join(filename, f))
     return all
 
+
 def ReadIMU(filename):
     '''return IMU data and timestamp of IMU'''
-    file = open(filename,'r')
+    file = open(filename, 'r')
     all = file.readlines()
     timestamp = []
     imu_data = []
@@ -45,14 +48,14 @@ def ReadIMU(filename):
         line = f.rstrip('\n').split(' ')
         timestamp.append(line[0])
         imu_data.append(line[1:])
-    return timestamp,imu_data
+    return timestamp, imu_data
 
 
-def CreateBag(args):#img,imu, bagname, timestamps
+def CreateBag(args):  # img,imu, bagname, timestamps
     '''read time stamps'''
     imgs = ReadImages(args[0])
-    imagetimestamps=[]
-    imutimesteps,imudata = ReadIMU(args[1]) #the url of  IMU data
+    imagetimestamps = []
+    imutimesteps, imudata = ReadIMU(args[1])  # the url of  IMU data
     file = open(args[3], 'r')
     all = file.readlines()
     for f in all:
@@ -60,7 +63,7 @@ def CreateBag(args):#img,imu, bagname, timestamps
     file.close()
     '''Creates a bag file with camera images'''
     if not os.path.exists(args[2]):
-	os.system(r'touch %s' % args[2])
+        os.system(r'touch %s' % args[2])
     bag = rosbag.Bag(args[2], 'w')
 
     try:
@@ -75,11 +78,11 @@ def CreateBag(args):#img,imu, bagname, timestamps
             linear_a.y = float(imudata[i][4])
             linear_a.z = float(imudata[i][5])
             imuStamp = rospy.rostime.Time.from_sec(float(imutimesteps[i]))
-            imu.header.stamp=imuStamp
+            imu.header.stamp = imuStamp
             imu.angular_velocity = angular_v
             imu.linear_acceleration = linear_a
 
-            bag.write("IMU/imu_raw",imu,imuStamp)
+            bag.write("IMU/imu_raw", imu, imuStamp)
 
         for i in range(len(imgs)):
             print("Adding %s" % imgs[i])
@@ -119,14 +122,12 @@ def CreateBag(args):#img,imu, bagname, timestamps
             Img_data = [pix for pixdata in [im.getdata()] for pix in pixdata]
             Img.step = Img.width
 
-
             Img.data = Img_data
             bag.write('camera/image_raw', Img, Stamp)
     finally:
         bag.close()
 
 
-
 if __name__ == "__main__":
-      print(sys.argv)
-      CreateBag(sys.argv[1:])
+    print(sys.argv)
+    CreateBag(sys.argv[1:])

@@ -24,16 +24,15 @@
 #include <queue>
 #include <opencv2/core/eigen.hpp>
 
-struct RetriveData
-{
+struct RetriveData {
     /* data */
     int old_index;
     int cur_index;
     double header;
     Vector3d P_old;
     Matrix3d R_old;
-    vector<cv::Point2f> measurements;
-    vector<int> features_ids; 
+    vector <cv::Point2f> measurements;
+    vector<int> features_ids;
     bool relocalized;
     bool relative_pose;
     Vector3d relative_t;
@@ -42,47 +41,75 @@ struct RetriveData
     double loop_pose[7];
 };
 
-class Estimator
-{
-  public:
+class Estimator {
+public:
     Estimator();
 
     void setParameter();
 
     // interface
     void processIMU(double t, const Vector3d &linear_acceleration, const Vector3d &angular_velocity);
-    void processImage(const map<int, vector<pair<int, Vector3d>>> &image, const map<int, vector<pair<int, Vector4d>>> &lines, const std_msgs::Header &header);
-    void processImage(const map<int, vector<pair<int, Vector3d>>> &image, const map<int, vector<pair<int, Vector8d>>> &lines, const std_msgs::Header &header);
-    void processImage(const map<int, vector<pair<int, Vector3d>>> &image, const std_msgs::Header &header);
+
+    void processImage(const map<int, vector<pair < int, Vector3d>>
+
+    > &image, const map<int, vector<pair < int, Vector4d>>> &lines,
+    const std_msgs::Header &header
+    );
+
+    void processImage(const map<int, vector<pair < int, Vector3d>>
+
+    > &image, const map<int, vector<pair < int, Vector8d>>> &lines,
+    const std_msgs::Header &header
+    );
+
+    void processImage(const map<int, vector<pair < int, Vector3d>>
+
+    > &image,
+    const std_msgs::Header &header
+    );
 
     // internal
     void clearState();
+
     bool initialStructure();
+
     bool visualInitialAlign();
+
     bool relativePose(Matrix3d &relative_R, Vector3d &relative_T, int &l);
+
     void slideWindow();
+
     void solveOdometry();
+
     void slideWindowNew();
+
     void slideWindowOld();
+
     void optimization();
+
     void optimizationwithLine();
+
     void onlyLineOpt();
+
     void LineBA();
+
     void LineBAincamera();
+
     void vector2double();
+
     void double2vector();
+
     void double2vector2();
+
     bool failureDetection();
 
 
-    enum SolverFlag
-    {
+    enum SolverFlag {
         INITIAL,
         NON_LINEAR
     };
 
-    enum MarginalizationFlag
-    {
+    enum MarginalizationFlag {
         MARGIN_OLD = 0,
         MARGIN_SECOND_NEW = 1
     };
@@ -91,10 +118,10 @@ class Estimator
     double sum_solver_time_ = 0.0;
     double mean_solver_time_ = 0.0;
     double sum_marg_time_ = 0.0;
-    double mean_marg_time_=0.0;
+    double mean_marg_time_ = 0.0;
 
     SolverFlag solver_flag;
-    MarginalizationFlag  marginalization_flag;
+    MarginalizationFlag marginalization_flag;
     Vector3d g;
     MatrixXd Ap[2], backup_A;
     VectorXd bp[2], backup_b;
@@ -116,8 +143,8 @@ class Estimator
     Vector3d acc_0, gyr_0;
 
     vector<double> dt_buf[(WINDOW_SIZE + 1)];
-    vector<Vector3d> linear_acceleration_buf[(WINDOW_SIZE + 1)];
-    vector<Vector3d> angular_velocity_buf[(WINDOW_SIZE + 1)];
+    vector <Vector3d> linear_acceleration_buf[(WINDOW_SIZE + 1)];
+    vector <Vector3d> angular_velocity_buf[(WINDOW_SIZE + 1)];
 
     int frame_count;
     int sum_of_outlier, sum_of_back, sum_of_front, sum_of_invalid;
@@ -130,9 +157,9 @@ class Estimator
     bool is_valid, is_key;
     bool failure_occur;
 
-    vector<Vector3d> point_cloud;
-    vector<Vector3d> margin_cloud;
-    vector<Vector3d> key_poses;
+    vector <Vector3d> point_cloud;
+    vector <Vector3d> margin_cloud;
+    vector <Vector3d> key_poses;
     double initial_timestamp;
 
     double baseline_;
@@ -144,7 +171,7 @@ class Estimator
     double para_Retrive_Pose[SIZE_POSE];
 
     RetriveData retrive_pose_data, front_pose;
-    vector<RetriveData> retrive_data_vector;
+    vector <RetriveData> retrive_data_vector;
     int loop_window_index;
     bool relocalize;
     Vector3d relocalize_t;

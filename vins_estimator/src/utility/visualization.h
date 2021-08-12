@@ -35,17 +35,18 @@ extern int IMAGE_ROW, IMAGE_COL;
 
 void registerPub(ros::NodeHandle &n);
 
-void pubLatestOdometry(const Eigen::Vector3d &P, const Eigen::Quaterniond &Q, const Eigen::Vector3d &V, const std_msgs::Header &header);
+void pubLatestOdometry(const Eigen::Vector3d &P, const Eigen::Quaterniond &Q, const Eigen::Vector3d &V,
+                       const std_msgs::Header &header);
 
 void printStatistics(const Estimator &estimator, double t);
 
 void pubOdometry(const Estimator &estimator, const std_msgs::Header &header, Eigen::Vector3d loop_correct_t,
-                Eigen::Matrix3d loop_correct_r);
+                 Eigen::Matrix3d loop_correct_r);
 
 void pubInitialGuess(const Estimator &estimator, const std_msgs::Header &header);
 
 void pubKeyPoses(const Estimator &estimator, const std_msgs::Header &header, Eigen::Vector3d loop_correct_t,
-				Eigen::Matrix3d loop_correct_r);
+                 Eigen::Matrix3d loop_correct_r);
 
 void pubCameraPose(const Estimator &estimator, const std_msgs::Header &header, Eigen::Vector3d loop_correct_t,
                    Eigen::Matrix3d loop_correct_r);
@@ -54,11 +55,11 @@ void pubPointCloud(const Estimator &estimator, const std_msgs::Header &header, E
                    Eigen::Matrix3d loop_correct_r);
 
 void pubLinesCloud(const Estimator &estimator, const std_msgs::Header &header, Eigen::Vector3d loop_correct_t,
-				   Eigen::Matrix3d loop_correct_r);
+                   Eigen::Matrix3d loop_correct_r);
 
-void pubPoseGraph(CameraPoseVisualization* posegraph, const std_msgs::Header &header);
+void pubPoseGraph(CameraPoseVisualization *posegraph, const std_msgs::Header &header);
 
 void updateLoopPath(nav_msgs::Path _loop_path);
 
 void pubTF(const Estimator &estimator, const std_msgs::Header &header, Eigen::Vector3d loop_correct_t,
-                   Eigen::Matrix3d loop_correct_r);
+           Eigen::Matrix3d loop_correct_r);

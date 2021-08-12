@@ -12,10 +12,7 @@ Created on Thu Jun 22 21:43:55 2017
 @author: hyj
 """
 
-import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 position = []
 quaterntions = []
@@ -48,7 +45,8 @@ with open('/home/hyj/catkin_ws/src/VINS-Mono/config/simdata/vins_result.txt', 'r
 position2 = []
 quaterntions2 = []
 timestamp2 = []
-with open('/home/hyj/catkin_ws/src/VINS-Mono/config/simdata/vins_result1.txt', 'r') as f:  # cam_pose_opt_o_0   cam_pose_opt_o_0
+with open('/home/hyj/catkin_ws/src/VINS-Mono/config/simdata/vins_result1.txt',
+          'r') as f:  # cam_pose_opt_o_0   cam_pose_opt_o_0
 
     data = f.readlines()  # txt中所有字符串读入data
     for line in data:

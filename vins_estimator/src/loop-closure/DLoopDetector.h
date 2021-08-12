@@ -57,8 +57,7 @@
 #define __D_T_LOOP_DETECTOR__
 
 /// Loop detector for sequences of monocular images
-namespace DLoopDetector
-{
+namespace DLoopDetector {
 }
 
 //#include "DBoW2.h"
@@ -67,7 +66,7 @@ namespace DLoopDetector
 
 /// BRIEF Loop Detector
 typedef DLoopDetector::TemplatedLoopDetector
-  <FBrief::TDescriptor, FBrief> BriefLoopDetector;
+        <FBrief::TDescriptor, FBrief> BriefLoopDetector;
 
 #endif
 

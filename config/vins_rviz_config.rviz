@@ -131,7 +131,7 @@ Visualization Manager:
       Marker Topic: /vins_estimator/camera_pose_visual
       Name: camera_visual
       Namespaces:
-        {}
+        { }
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -162,7 +162,7 @@ Visualization Manager:
       Marker Topic: /vins_estimator/pose_graph
       Name: loop_link
       Namespaces:
-        {}
+        { }
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -215,7 +215,7 @@ Visualization Manager:
         world:
           body:
             camera:
-              {}
+              { }
       Update Interval: 0
       Value: true
     - Class: rviz/Axes

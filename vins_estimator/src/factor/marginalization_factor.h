@@ -12,10 +12,11 @@
 
 const int NUM_THREADS = 4;
 
-struct ResidualBlockInfo
-{
-    ResidualBlockInfo(ceres::CostFunction *_cost_function, ceres::LossFunction *_loss_function, std::vector<double *> _parameter_blocks, std::vector<int> _drop_set)
-        : cost_function(_cost_function), loss_function(_loss_function), parameter_blocks(_parameter_blocks), drop_set(_drop_set) {}
+struct ResidualBlockInfo {
+    ResidualBlockInfo(ceres::CostFunction *_cost_function, ceres::LossFunction *_loss_function,
+                      std::vector<double *> _parameter_blocks, std::vector<int> _drop_set)
+            : cost_function(_cost_function), loss_function(_loss_function), parameter_blocks(_parameter_blocks),
+              drop_set(_drop_set) {}
 
     void Evaluate();
 
@@ -25,17 +26,15 @@ struct ResidualBlockInfo
     std::vector<int> drop_set;
 
     double **raw_jacobians;
-    std::vector<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> jacobians;
+    std::vector <Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> jacobians;
     Eigen::VectorXd residuals;
 
-    int localSize(int size)
-    {
+    int localSize(int size) {
         return size == 7 ? 6 : size;
     }
 };
 
-struct ThreadsStruct
-{
+struct ThreadsStruct {
     std::vector<ResidualBlockInfo *> sub_factors;
     Eigen::MatrixXd A;
     Eigen::VectorXd b;
@@ -43,15 +42,20 @@ struct ThreadsStruct
     std::unordered_map<long, int> parameter_block_idx; //local size
 };
 
-class MarginalizationInfo
-{
-  public:
+class MarginalizationInfo {
+public:
     ~MarginalizationInfo();
+
     int localSize(int size) const;
+
     int globalSize(int size) const;
+
     void addResidualBlockInfo(ResidualBlockInfo *residual_block_info);
+
     void preMarginalize();
+
     void marginalize();
+
     std::vector<double *> getParameterBlocks(std::unordered_map<long, double *> &addr_shift);
 
     std::vector<ResidualBlockInfo *> factors;
@@ -71,11 +75,11 @@ class MarginalizationInfo
 
 };
 
-class MarginalizationFactor : public ceres::CostFunction
-{
-  public:
-    MarginalizationFactor(MarginalizationInfo* _marginalization_info);
+class MarginalizationFactor : public ceres::CostFunction {
+public:
+    MarginalizationFactor(MarginalizationInfo *_marginalization_info);
+
     virtual bool Evaluate(double const *const *parameters, double *residuals, double **jacobians) const;
 
-    MarginalizationInfo* marginalization_info;
+    MarginalizationInfo *marginalization_info;
 };

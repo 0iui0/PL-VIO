@@ -4,18 +4,15 @@
 #include <eigen3/Eigen/Geometry>
 #include <fstream>
 #include <iostream>
+
 using namespace std;
 
-template <typename T>
-T readParam(ros::NodeHandle &n, std::string name)
-{
+template<typename T>
+T readParam(ros::NodeHandle &n, std::string name) {
     T ans;
-    if (n.getParam(name, ans))
-    {
+    if (n.getParam(name, ans)) {
         ROS_INFO_STREAM("Loaded " << name << ": " << ans);
-    }
-    else
-    {
+    } else {
         ROS_ERROR_STREAM("Failed to load " << name);
         n.shutdown();
     }
@@ -23,25 +20,23 @@ T readParam(ros::NodeHandle &n, std::string name)
 }
 
 
-void LoadPose(std::string filename, std::vector<double>& timestamp,std::vector<Eigen::Vector3d>& gyros, std::vector<Eigen::Vector3d>& accs)
-{
+void LoadPose(std::string filename, std::vector<double> &timestamp, std::vector <Eigen::Vector3d> &gyros,
+              std::vector <Eigen::Vector3d> &accs) {
 
     std::ifstream f;
     f.open(filename.c_str());
 
-    if(!f.is_open())
-    {
-        std::cerr << " can't open LoadFeatures file "<<std::endl;
+    if (!f.is_open()) {
+        std::cerr << " can't open LoadFeatures file " << std::endl;
         return;
     }
 
     while (!f.eof()) {
 
         std::string s;
-        std::getline(f,s);
+        std::getline(f, s);
 
-        if(! s.empty())
-        {
+        if (!s.empty()) {
             std::stringstream ss;
             ss << s;
 
@@ -51,20 +46,20 @@ void LoadPose(std::string filename, std::vector<double>& timestamp,std::vector<E
             Eigen::Vector3d gyro;
             Eigen::Vector3d acc;
 
-            ss>>time;
-            ss>>q.w();
-            ss>>q.x();
-            ss>>q.y();
-            ss>>q.z();
-            ss>>t(0);
-            ss>>t(1);
-            ss>>t(2);
-            ss>>gyro(0);
-            ss>>gyro(1);
-            ss>>gyro(2);
-            ss>>acc(0);
-            ss>>acc(1);
-            ss>>acc(2);
+            ss >> time;
+            ss >> q.w();
+            ss >> q.x();
+            ss >> q.y();
+            ss >> q.z();
+            ss >> t(0);
+            ss >> t(1);
+            ss >> t(2);
+            ss >> gyro(0);
+            ss >> gyro(1);
+            ss >> gyro(2);
+            ss >> acc(0);
+            ss >> acc(1);
+            ss >> acc(2);
 
             timestamp.push_back(time);
             gyros.push_back(gyro);
@@ -74,32 +69,29 @@ void LoadPose(std::string filename, std::vector<double>& timestamp,std::vector<E
 
 }
 
-int main(int argc, char **argv)
-{
- 
+int main(int argc, char **argv) {
+
     ros::init(argc, argv, "imu");
     ros::NodeHandle n("~");
     ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Info);
-    
-    ros::Publisher out_pub = n.advertise<sensor_msgs::Imu >("/imu0", 1000);
+
+    ros::Publisher out_pub = n.advertise<sensor_msgs::Imu>("/imu0", 1000);
     ros::Rate loop_rate(200);
     std::vector<double> timestamp;
-    std::vector<Eigen::Vector3d> gyros;
-    std::vector<Eigen::Vector3d> accs;
+    std::vector <Eigen::Vector3d> gyros;
+    std::vector <Eigen::Vector3d> accs;
 
     std::string sim_file;
-    if (!n.getParam("sim_file_path", sim_file))
-    {
+    if (!n.getParam("sim_file_path", sim_file)) {
         sim_file = std::string("/home/hyj/my_slam/vio_sim/vio_pl_sim/bin/");
     }
     ROS_INFO_STREAM("Loaded " << "sim_file_path" << ": " << sim_file);
 
-    LoadPose(sim_file + "imu_pose.txt",timestamp, gyros, accs);
+    LoadPose(sim_file + "imu_pose.txt", timestamp, gyros, accs);
 
     sleep(1);
     //while (ros::ok())
-    for (int i = 0; i < timestamp.size(); ++i)
-    {
+    for (int i = 0; i < timestamp.size(); ++i) {
         //new imu message
         sensor_msgs::Imu imu_msg = sensor_msgs::Imu();
 

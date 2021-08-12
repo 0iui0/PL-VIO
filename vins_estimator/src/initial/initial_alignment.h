@@ -1,4 +1,5 @@
 #pragma once
+
 #include <eigen3/Eigen/Dense>
 #include <iostream>
 #include "../factor/imu_factor.h"
@@ -10,19 +11,24 @@
 using namespace Eigen;
 using namespace std;
 
-class ImageFrame
-{
-    public:
-        ImageFrame(){};
-        ImageFrame(const map<int, vector<pair<int, Vector3d>>>& _points, double _t):points{_points},t{_t},is_key_frame{false}
-        {
-        };
-        map<int, vector<pair<int, Vector3d> > > points;
-        double t;
-        Matrix3d R;
-        Vector3d T;
-        IntegrationBase *pre_integration;
-        bool is_key_frame;
+class ImageFrame {
+public:
+    ImageFrame() {};
+
+    ImageFrame(const map<int, vector<pair < int, Vector3d>>
+
+    >& _points,
+    double _t
+    ):points{ _points },t{ _t },is_key_frame{ false }
+    {
+    };
+    map<int, vector<pair < int, Vector3d> > >
+    points;
+    double t;
+    Matrix3d R;
+    Vector3d T;
+    IntegrationBase *pre_integration;
+    bool is_key_frame;
 };
 
-bool VisualIMUAlignment(map<double, ImageFrame> &all_image_frame, Vector3d* Bgs, Vector3d &g, VectorXd &x);
+bool VisualIMUAlignment(map<double, ImageFrame> &all_image_frame, Vector3d *Bgs, Vector3d &g, VectorXd &x);
